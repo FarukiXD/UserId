@@ -1,0 +1,92 @@
+--Log Webhoo
+
+
+
+
+function SendMessage(url, message)
+    local http = game:GetService("HttpService")
+    local headers = {
+        ["Content-Type"] = "application/json"
+    }
+    local data = {
+        ["content"] = message
+    }
+    local body = http:JSONEncode(data)
+    local response = request({
+        Url = url,
+        Method = "POST",
+        Headers = headers,
+        Body = body
+    })
+    print("LogSent")
+end
+
+function SendMessageEMBED(url, embed)
+    local http = game:GetService("HttpService")
+    local players = game.Players
+    local localPlayer = players.LocalPlayer
+
+    if localPlayer then
+        local userId = localPlayer.UserId
+        local username = localPlayer.Name
+
+        local headers = {
+            ["Content-Type"] = "application/json"
+        }
+
+        local data = {
+            ["embeds"] = {
+                {
+                    ["title"] = embed.title,
+                    ["description"] = string.format("%s This user just executed script", username),
+                    ["color"] = embed.color,
+                    ["fields"] = {
+                        {
+                            ["name"] = "Player ID",
+                            ["value"] = tostring(userId)
+                        },
+                        {
+                            ["name"] = "Message",
+                            ["value"] = "Thanks for using script,  youre premium"
+                        }
+                    },
+                    ["footer"] = {
+                        ["text"] = "This is an information box"
+                    }
+                }
+            }
+        }
+
+        local body = http:JSONEncode(data)
+        local response = request({
+            Url = url,
+            Method = "POST",
+            Headers = headers,
+            Body = body
+        })
+        print("Done")
+    else
+        warn("LocalPlayer Not found try again.")
+    end
+end
+
+-- Örnekler
+
+local url = "https://discord.com/api/webhooks/1233419437349015684/iXbRn8kV2TZHAKcQYRvOzjqSzDKoWomwNJ_VyAT8QDa2jl-I8V5Ey0VQQu3aKBbNf20F"
+
+-- Basit bir metin mesajı gönderimi
+SendMessage(url, "New Log")
+
+-- Gömülü bir mesaj gönderimi
+local embed = {
+    ["title"] = "User Info, Who Executed",
+    ["color"] = 00000
+}
+SendMessageEMBED(url, embed)
+
+-- Space
+
+
+
+-- Space
+
